@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PaisesService } from '../../services/paises.service';
 import { CommonModule, NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Necesario para [(ngModel)]
@@ -15,12 +15,15 @@ export class ListpaisesComponent implements OnInit {
   countries: any[] = [];
   errorMessage: string = '';
   loading: boolean = true;
-  
+
   // Propiedades para los filtros
   filterName: string = '';
   filterRegion: string = '';
 
-  constructor(private paisesService: PaisesService) {}
+  constructor(
+    private paisesService: PaisesService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     // Carga inicial de países (se verificará si hay filtros al inicio)
@@ -38,37 +41,43 @@ export class ListpaisesComponent implements OnInit {
     let apiCall: Observable<any[]>; // Declara una variable para contener el Observable de la llamada a la API
 
     // Lógica para decidir qué método de la API llamar según los filtros
-    if (this.filterName.trim() !== '') { // Si hay texto en el filtro de nombre (ignorando espacios en blanco)
+    if (this.filterName.trim() !== '') {
       // Si el usuario ingresó un nombre, busca por nombre
       apiCall = this.paisesService.getPaisesByName(this.filterName.trim());
-    } else if (this.filterRegion !== '') { // Si se seleccionó una región (y no hay nombre ingresado)
+    } else if (this.filterRegion !== '') {
       // Si se seleccionó una región, filtra por región
       apiCall = this.paisesService.getPaisesByRegion(this.filterRegion);
     } else {
-      // Si no hay ningún filtro activo (nombre o región están vacíos), trae todos los países
+      // Si no hay ningún filtro activo, trae todos los países
       apiCall = this.paisesService.getAllpaises();
     }
 
     // Suscríbete al Observable resultante de la llamada a la API
     apiCall.subscribe({
       next: (data: any[]) => {
-        console.log('Datos de la API recibidos (con filtros aplicados si los hay):', data); // Para depuración
+        console.log('Datos de la API recibidos (con filtros aplicados si los hay):', data);
         this.countries = data;
-        this.loading = false; // Datos cargados, detiene el estado de carga
+        this.loading = false;
 
         if (data.length === 0) {
           this.errorMessage = 'No se encontraron países que coincidan con los filtros aplicados.';
         }
+
+        // Con detección zoneless, forzamos refresco al resolver HTTP.
+        this.cdr.detectChanges();
       },
       error: (error: any) => {
-        console.error('Error al obtener países con filtros:', error); // Registra el error completo
-        // Proporciona un mensaje de error más amigable según el estado HTTP
+        console.error('Error al obtener países con filtros:', error);
+
         if (error.status === 404 && this.filterName.trim() !== '') {
           this.errorMessage = `No se encontró ningún país con el nombre "${this.filterName}".`;
         } else {
           this.errorMessage = 'No se pudieron cargar los países. Por favor, inténtalo de nuevo más tarde.';
         }
-        this.loading = false; // La carga finalizó incluso si hubo un error
+
+        this.loading = false;
+        // Mantiene sincronizada la vista también en estado de error.
+        this.cdr.detectChanges();
       }
     });
   }

@@ -1,12 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PaisesService } from './paises.service';
+
+
 
 describe('PaisesService', () => {
   let service: PaisesService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      // HttpClient real + backend de testing para inyección segura del servicio.
+      providers: [provideHttpClient(), provideHttpClientTesting()]
+    });
     service = TestBed.inject(PaisesService);
   });
 
@@ -14,3 +20,4 @@ describe('PaisesService', () => {
     expect(service).toBeTruthy();
   });
 });
+
