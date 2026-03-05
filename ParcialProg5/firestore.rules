@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{uid}/favorites/{favoriteId} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && isValidFavoriteData(request.resource.data);
+
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    function isValidFavoriteData(data) {
+      return data.countryCode is string
+        && data.countryCode.size() > 0
+        && data.countryName is string
+        && data.countryName.size() > 0
+        && data.comment is string
+        && data.comment.size() >= 3
+        && data.rating is int
+        && data.rating >= 1
+        && data.rating <= 5;
+    }
+  }
+}

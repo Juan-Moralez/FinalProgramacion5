@@ -1,4 +1,24 @@
+<header class="topbar">
+  <nav>
+    <a routerLink="/">Inicio</a>
+
+    <a routerLink="/favorites" *ngIf="user$ | async">Favoritos</a>
+  </nav>
+
+  <div class="session" *ngIf="user$ | async as user; else guest">
+    <span>{{ user.email }}</span>
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
+
+  <ng-template #guest>
+    <div class="guest-cta">
+      <span>¡Empieza a guardar registro de tus viajes!</span>
+      <a routerLink="/login">Iniciar sesión</a>
+      <a routerLink="/register">Registrarse</a>
+    </div>
+  </ng-template>
+</header>
+
 <main>
-<app-listpaises></app-listpaises>
+  <router-outlet />
 </main>
-<router-outlet />

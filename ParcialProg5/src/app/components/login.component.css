@@ -1,0 +1,54 @@
+.auth-card {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 1.25rem;
+  border: 1px solid #1cff1c;
+  border-radius: 10px;
+  background: #0a120a;
+  color: #d8ffd8;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+input {
+  padding: 0.55rem;
+  border: 1px solid #1cff1c;
+  border-radius: 6px;
+  background: #111;
+  color: #d8ffd8;
+}
+
+button {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #1cff1c;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #0f2a0f;
+  color: #d8ffd8;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #ff9f9f;
+  margin-top: 0.75rem;
+}
+
+.help {
+  margin-top: 0.8rem;
+}
+
+.help a {
+  color: #72ff72;
+}

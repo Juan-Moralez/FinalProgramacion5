@@ -1,0 +1,71 @@
+.favorites-container {
+  padding: 1rem;
+  color: #d8ffd8;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  text-decoration: none;
+  background: #0f2a0f;
+  color: #d8ffd8;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #1cff1c;
+}
+
+.fav-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fav-table th,
+.fav-table td {
+  border: 1px solid #1cff1c;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.error {
+  color: #ff9f9f;
+}
+
+.message {
+  color: #9cff9c;
+}
+
+.fav-table thead tr {
+  background: #0f2a0f;
+}
+
+.fav-table tbody tr:nth-child(even) {
+  background: #0b140b;
+}
+
+.fav-table a,
+.fav-table button {
+  border: 1px solid #1cff1c;
+  background: #0f2a0f;
+  color: #d8ffd8;
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  height: 34px;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  white-space: nowrap;
+}

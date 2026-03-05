@@ -1,61 +1,88 @@
-﻿import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { FavoritesService } from '../../services/favorite.service';
 import { PaisesService } from '../../services/paises.service';
-import { CommonModule, NgIf, NgFor } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necesario para [(ngModel)]
-import { Observable } from 'rxjs'; // Necesario para tipar 'apiCall'
 
 @Component({
   selector: 'app-listpaises',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule], // Asegúrate de que FormsModule esté aquí
+  imports: [CommonModule, NgIf, NgFor, FormsModule],
   templateUrl: './listpaises.html',
   styleUrl: './listpaises.css'
 })
-export class ListpaisesComponent implements OnInit {
+export class ListpaisesComponent implements OnInit, OnDestroy {
   countries: any[] = [];
-  errorMessage: string = '';
-  loading: boolean = true;
+  errorMessage = '';
+  loading = true;
+  isAuthenticated = false;
+  favoriteCountryCodes = new Set<string>();
 
-  // Propiedades para los filtros
-  filterName: string = '';
-  filterRegion: string = '';
+  filterName = '';
+  filterRegion = '';
+
+  private authSubscription?: Subscription;
+  private favoritesSubscription?: Subscription;
 
   constructor(
     private paisesService: PaisesService,
+    private favoritesService: FavoritesService,
+    private authService: AuthService,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Carga inicial de países (se verificará si hay filtros al inicio)
+    this.observeAuthAndFavorites();
     this.loadCountries();
   }
 
-  /**
-   * Carga países basándose en los valores actuales de los filtros.
-   * Determina qué método del servicio API debe llamar.
-   */
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
+    this.favoritesSubscription?.unsubscribe();
+  }
+
+  private observeAuthAndFavorites(): void {
+    this.authSubscription = this.authService.user$.subscribe((user) => {
+      this.isAuthenticated = !!user;
+      this.favoriteCountryCodes.clear();
+      this.favoritesSubscription?.unsubscribe();
+
+      if (!user) {
+        this.cdr.detectChanges();
+        return;
+      }
+
+      this.favoritesSubscription = this.favoritesService.getFavoritesByUser(user.uid).subscribe((favorites) => {
+        this.favoriteCountryCodes = new Set(
+          favorites
+            .map((favorite) => (favorite.countryCode ?? '').toUpperCase().trim())
+            .filter((code) => code.length > 0)
+        );
+        this.cdr.detectChanges();
+      });
+    });
+  }
+
   loadCountries(): void {
-    this.loading = true; // Establece el estado de carga a true antes de la llamada a la API
-    this.errorMessage = ''; // Limpia cualquier mensaje de error previo
+    this.loading = true;
+    this.errorMessage = '';
 
-    let apiCall: Observable<any[]>; // Declara una variable para contener el Observable de la llamada a la API
+    let apiCall: Observable<any[]>;
 
-    // Lógica para decidir qué método de la API llamar según los filtros
     if (this.filterName.trim() !== '') {
-      // Si el usuario ingresó un nombre, busca por nombre
       apiCall = this.paisesService.getPaisesByName(this.filterName.trim());
     } else if (this.filterRegion !== '') {
-      // Si se seleccionó una región, filtra por región
       apiCall = this.paisesService.getPaisesByRegion(this.filterRegion);
     } else {
-      // Si no hay ningún filtro activo, trae todos los países
       apiCall = this.paisesService.getAllpaises();
     }
 
-    // Suscríbete al Observable resultante de la llamada a la API
     apiCall.subscribe({
       next: (data: any[]) => {
-        console.log('Datos de la API recibidos (con filtros aplicados si los hay):', data);
         this.countries = data;
         this.loading = false;
 
@@ -63,12 +90,9 @@ export class ListpaisesComponent implements OnInit {
           this.errorMessage = 'No se encontraron países que coincidan con los filtros aplicados.';
         }
 
-        // Con detección zoneless, forzamos refresco al resolver HTTP.
         this.cdr.detectChanges();
       },
       error: (error: any) => {
-        console.error('Error al obtener países con filtros:', error);
-
         if (error.status === 404 && this.filterName.trim() !== '') {
           this.errorMessage = `No se encontró ningún país con el nombre "${this.filterName}".`;
         } else {
@@ -76,19 +100,53 @@ export class ListpaisesComponent implements OnInit {
         }
 
         this.loading = false;
-        // Mantiene sincronizada la vista también en estado de error.
         this.cdr.detectChanges();
       }
     });
   }
 
-  /**
-   * Se llama desde el HTML cuando un campo de filtro cambia.
-   * Activa la carga de países con los nuevos valores de filtro.
-   */
   applyFilter(): void {
-    // Esta función simplemente activa la función principal loadCountries,
-    // que luego decide cómo obtener los datos basándose en los valores de filtro actuales.
     this.loadCountries();
+  }
+
+  isCountryAlreadyFavorite(country: any): boolean {
+    const countryCode = (country?.cca3 ?? '').toUpperCase().trim();
+    return !!countryCode && this.favoriteCountryCodes.has(countryCode);
+  }
+
+  goToAddFavorite(country: any): void {
+    const user = this.authService.getCurrentUser();
+    const countryCode = (country?.cca3 ?? '').toUpperCase().trim();
+    const countryName = country?.name?.common ?? '';
+
+    this.errorMessage = '';
+
+    if (!countryCode || !countryName) {
+      this.errorMessage = 'No se pudo obtener información del país.';
+      return;
+    }
+
+    if (this.isCountryAlreadyFavorite(country)) {
+      this.errorMessage = 'Ese país ya existe en tus favoritos.';
+      return;
+    }
+
+    if (!user) {
+      this.router.navigate(['/login'], {
+        queryParams: {
+          returnUrl: '/favorites/new',
+          countryCode,
+          countryName
+        }
+      });
+      return;
+    }
+
+    this.router.navigate(['/favorites/new'], {
+      queryParams: {
+        countryCode,
+        countryName
+      }
+    });
   }
 }

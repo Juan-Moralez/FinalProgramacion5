@@ -1,13 +1,13 @@
 h1 {
-  font-size: 60px;
-  color: black;
+  font-size: 48px;
+  color: #9bff9b;
   text-align: center;
-  font-family: arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .country-list-container {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 h2 {
@@ -25,15 +25,15 @@ h2 {
 }
 
 .message {
-  background-color: #e0f7fa;
-  color: #00796b;
-  border: 1px solid #00bcd4;
+  background-color: #0d1d0d;
+  color: #a6f7a6;
+  border: 1px solid #1cff1c;
 }
 
 .error-message {
-  background-color: #ffe0b2;
-  color: #ef6c00;
-  border: 1px solid #ff9800;
+  background-color: #2a1010;
+  color: #ffb7b7;
+  border: 1px solid #ff4c4c;
 }
 
 /* Estilos de la tabla */
@@ -45,30 +45,30 @@ h2 {
 }
 
 .country-table thead tr {
-  background-color: green; /* Color de fondo para el encabezado */
-  color: black;
+  background-color: #0f2a0f;
+  color: #caffca;
   text-align: left;
 }
 
 .country-table th,
 .country-table td {
   padding: 12px 15px;
-  border: 2px solid black; /* Ajuste: El `!important` del comentario no es necesario si esta es la única regla. */
+  border: 2px solid #1cff1c;
 }
 
 .country-table tbody tr:nth-child(even) {
-  background-color: green; /* Color de fondo para filas pares */
+  background-color: #0b140b;
 }
 
 .country-table tbody tr:hover {
-  background-color: cyan; /* Resalta la fila al pasar el ratón */
+  background-color: #143314;
 }
 
 .country-flag-small {
   width: 40px;
   height: auto;
   vertical-align: middle;
-  border: 1px solid #ccc;
+  border: 1px solid #1cff1c;
   box-shadow: 0 0 3px rgba(0,0,0,0.2);
 }
 
@@ -81,8 +81,8 @@ h2 {
   gap: 20px; /* Espacio entre los grupos de filtro */
   margin-bottom: 20px;
   padding: 15px;
-  background-color: royalblue; /* Fondo claro para la sección de filtros */
-  border: 1px solid black;
+  background-color: #0a120a;
+  border: 1px solid #1cff1c;
   border-radius: 8px;
 }
   
@@ -96,30 +96,44 @@ h2 {
 .filter-group label {
   font-weight: bold;
   margin-bottom: 5px;
-  color: black; /* Color de texto para las etiquetas de filtro */
+  color: #b5ffb5;
 }
 
 .filters-section input[type="text"],
 .filters-section select {
   padding: 10px;
-  border: 1px solid royalblue;
+  border: 1px solid #1cff1c;
   border-radius: 5px;
   width: 100%; /* Ocupa el ancho completo del contenedor flex */
   box-sizing: border-box; /* Incluye padding y borde en el ancho total */
   font-size: 1em;
-  color: black; /* Color de texto para los inputs */
-  background-color: white; /* Fondo blanco para los inputs */
+  color: #d8ffd8;
+  background-color: #111;
 }
 
 .filters-section input[type="text"]:focus,
 .filters-section select:focus {
-  border-color: green; /* Tu color verde al enfocar */
+  border-color: #1cff1c;
   outline: none; /* Elimina el contorno por defecto */
-  box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* Sombra suave verde al enfocar */
+  box-shadow: 0 0 5px rgba(28, 255, 28, 0.6);
 }
 
 hr {
   border: none;
-  border-top: 1px solid black; /* Línea separadora suave */
+  border-top: 1px solid #1cff1c;
   margin: 30px 0; /* Espacio antes y después del separador */
+}
+
+.already-favorite {
+  color: #8dff8d;
+  font-weight: 700;
+}
+
+.country-table button {
+  border: 1px solid #1cff1c;
+  background: #0f2a0f;
+  color: #d8ffd8;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
 }

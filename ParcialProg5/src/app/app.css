@@ -1,0 +1,57 @@
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #1cff1c;
+  background: #0a120a;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.topbar a {
+  text-decoration: none;
+  color: #72ff72;
+  font-weight: 600;
+  border: 1px solid #1cff1c;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  background: #0d1b0d;
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.session button {
+  border: 1px solid #1cff1c;
+  border-radius: 6px;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  background: #143314;
+  color: #d8ffd8;
+}
+
+.guest-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.guest-cta a {
+  text-decoration: none;
+  border: 1px solid #1cff1c;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+  background: #0d1b0d;
+}
+
+main {
+  padding: 1rem;
+}

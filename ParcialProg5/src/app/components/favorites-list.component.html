@@ -1,0 +1,41 @@
+<section class="favorites-container">
+  <div class="title-row">
+    <h1>Mis viajes favoritos</h1>
+    <a class="btn" routerLink="/">Volver a países</a>
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="message" *ngIf="loading">Cargando favoritos...</p>
+
+  <ng-container *ngIf="!loading">
+    <ng-container *ngIf="favorites$ | async as favorites">
+      <p class="message" *ngIf="favorites.length === 0">
+        Todavía no agregaste países a favoritos.
+      </p>
+
+      <table *ngIf="favorites.length > 0" class="fav-table">
+        <thead>
+          <tr>
+            <th>País</th>
+            <th>Comentario</th>
+            <th>Puntuación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let favorite of favorites">
+            <td>{{ favorite.countryName }}</td>
+            <td>{{ favorite.comment }}</td>
+            <td>{{ favorite.rating }}/5</td>
+            
+            <td class="actions-cell">
+              <a [routerLink]="['/favorites', favorite.id, 'edit']">Editar</a>
+              <button type="button" (click)="deleteFavorite(favorite)">Eliminar</button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </ng-container>
+</section>

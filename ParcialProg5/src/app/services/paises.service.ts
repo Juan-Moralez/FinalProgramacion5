@@ -11,17 +11,17 @@ export class PaisesService {
   constructor(private Http: HttpClient) { 
   }
   getAllpaises(): Observable<any[]>{
-    const fields = 'name,capital,region,population,flags,ccn3';
+    const fields = 'name,capital,region,population,flags,cca3';
     return this.Http.get<any[]>(`${this.API_BASE_URL}/all?fields=${fields}`)
    }
 
    getPaisesByName(name: string): Observable<any[]> {
-    const fields = 'name,capital,region,population,flags,ccn3';
+    const fields = 'name,capital,region,population,flags,cca3';
     return this.Http.get<any[]>(`https://restcountries.com/v3.1/name/${name}?fields=${fields}`)
    }
 
    getPaisesByRegion(region: string): Observable<any[]> {
-    const fields = 'name,capital,region,population,flags,ccn3';
+    const fields = 'name,capital,region,population,flags,cca3';
     return this.Http.get<any[]>(`https://restcountries.com/v3.1/region/${region}?fields=${fields}`);
   }
 

@@ -40,6 +40,7 @@
           <th>Capital</th>
           <th>Población</th>
           <th>Región</th>
+          <th>Favoritos</th>
         </tr>
       </thead>
       <tbody>
@@ -51,6 +52,16 @@
           <td>{{ country.capital?.[0] || 'N/A' }}</td>
           <td>{{ country.population | number }}</td>
           <td>{{ country.region || 'N/A'}}</td>
+          <td>
+            <ng-container *ngIf="isCountryAlreadyFavorite(country); else addFavoriteButton">
+              <span class="already-favorite">Ya agregado</span>
+            </ng-container>
+            <ng-template #addFavoriteButton>
+              <button type="button" (click)="goToAddFavorite(country)">
+                Agregar a favoritos
+              </button>
+            </ng-template>
+          </td>
         </tr>
       </tbody>
     </table>

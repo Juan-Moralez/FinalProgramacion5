@@ -1,4 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
-    background-color: royalblue;
+  margin: 0;
+  padding: 0;
+  background: #050805;
+  color: #d8ffd8;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+  color: #5cff5c;
 }

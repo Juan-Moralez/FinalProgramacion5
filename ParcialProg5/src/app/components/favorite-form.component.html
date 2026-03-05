@@ -1,0 +1,31 @@
+<section class="form-wrap">
+  <h1>{{ mode === 'create' ? 'Recuerdos de tu viaje' : 'Editar favorito' }}</h1>
+
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p *ngIf="loading">Cargando formulario...</p>
+
+  <form *ngIf="!loading" (ngSubmit)="onSubmit()">
+    <label for="name">País</label>
+    <input id="name" type="text" [value]="countryName" readonly />
+
+    <label for="comment">Comentario</label>
+    <textarea id="comment" name="comment" [(ngModel)]="comment" rows="4" required></textarea>
+
+    <label for="rating">Puntuación (1-5)</label>
+    <select id="rating" name="rating" [(ngModel)]="rating" required>
+      <option [ngValue]="1">1</option>
+      <option [ngValue]="2">2</option>
+      <option [ngValue]="3">3</option>
+      <option [ngValue]="4">4</option>
+      <option [ngValue]="5">5</option>
+    </select>
+
+    <div class="actions">
+      <button type="submit" [disabled]="saving">
+        {{ saving ? 'Guardando...' : (mode === 'create' ? 'Crear' : 'Actualizar') }}
+      </button>
+      <a routerLink="/favorites">Cancelar</a>
+    </div>
+  </form>
+</section>
